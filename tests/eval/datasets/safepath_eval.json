@@ -1,0 +1,26 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "flood_west_district",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Flood water has entered my neighborhood in the West District. I have elderly parents with me. We need help and shelter."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "earthquake_east_district",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "There was a major earthquake in the East District. Buildings are shaken and roads have debris. Need shelter and medical status."
+          }
+        ]
+      }
+    }
+  ]
+}
