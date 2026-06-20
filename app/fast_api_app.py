@@ -24,6 +24,9 @@ import os
 import sys
 import json
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from google.adk.cli.fast_api import get_fast_api_app
@@ -172,7 +175,12 @@ def clear_audit_logs():
 @app.post("/api/report")
 async def process_report(payload: ReportRequest):
     """Submit emergency report to the coordinator and execute sub-agents."""
+    print("DEBUG: Checking environment variables during POST /api/report")
+    print("DEBUG: GEMINI_API_KEY in env:", "GEMINI_API_KEY" in os.environ)
+    print("DEBUG: GEMINI_API_KEY:", os.environ.get("GEMINI_API_KEY"))
+    print("DEBUG: GOOGLE_API_KEY:", os.environ.get("GOOGLE_API_KEY"))
     user_id = payload.user_id
+
     session_id = payload.session_id
     message = payload.message
     

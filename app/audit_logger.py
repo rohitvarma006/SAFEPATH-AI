@@ -99,7 +99,7 @@ class AuditLoggerPlugin(BasePlugin):
             }
         )
 
-    async def before_tool_callback(self, *, tool, args, tool_context, **kwargs) -> None:
+    async def before_tool_callback(self, *, tool, tool_args, tool_context, **kwargs) -> None:
         """Log tool invocation arguments, checking for potential location leaks."""
         session_id = tool_context.state.get("session_id", "unknown_session")
         role = tool_context.state.get("user_role", "Citizen")
@@ -119,7 +119,7 @@ class AuditLoggerPlugin(BasePlugin):
                 details={
                     "tool": tool_name,
                     "warning": "Location sensitive tool called without explicit user location consent.",
-                    "arguments_raw": args
+                    "arguments_raw": tool_args
                 }
             )
             
@@ -129,11 +129,11 @@ class AuditLoggerPlugin(BasePlugin):
             event="TOOL_CALL_START",
             details={
                 "tool": tool_name,
-                "arguments": {k: ("[MASKED]" if "location" in k or "origin" in k else v) for k, v in args.items()}
+                "arguments": {k: ("[MASKED]" if "location" in k or "origin" in k else v) for k, v in tool_args.items()}
             }
         )
 
-    async def after_tool_callback(self, *, tool, args, tool_context, tool_response, **kwargs) -> None:
+    async def after_tool_callback(self, *, tool, tool_args, tool_context, result, **kwargs) -> None:
         """Log tool outcomes."""
         session_id = tool_context.state.get("session_id", "unknown_session")
         role = tool_context.state.get("user_role", "Citizen")
@@ -144,6 +144,7 @@ class AuditLoggerPlugin(BasePlugin):
             event="TOOL_CALL_COMPLETE",
             details={
                 "tool": tool.name,
-                "response_size_chars": len(str(tool_response))
+                "response_size_chars": len(str(result))
             }
         )
+
